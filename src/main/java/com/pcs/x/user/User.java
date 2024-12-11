@@ -1,11 +1,17 @@
 package com.pcs.x.user;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pcs.x.post.Post;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
@@ -16,24 +22,24 @@ public class User {
 	@Id
 	@GeneratedValue
 	private Long id;
-	
+
 	@Size(min = 2, message = "Name should be more than 2 characters")
 	private String name;
-	
+
 	@Past(message = "Date of birth should be past")
 	private LocalDate birthDate;
-	
-//	@OneToMany(mappedBy = "user")
-//	@JsonIgnore
-//	private List<Post> posts;
-//
-//	public List<Post> getPosts() {
-//		return posts;
-//	}
-//
-//	public void setPosts(List<Post> posts) {
-//		this.posts = posts;
-//	}
+
+	@OneToMany(fetch = FetchType.EAGER,mappedBy = "user")
+	@JsonIgnore
+	private List<Post> posts;
+
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
 
 	public User() {
 	}
@@ -87,7 +93,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", id=" + id + ", birthDate=" + birthDate + "]";
+		return "User [id=" + id + ", name=" + name + ", birthDate=" + birthDate + "]";
 	}
 
 }

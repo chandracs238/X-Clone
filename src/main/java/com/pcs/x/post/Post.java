@@ -5,10 +5,12 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pcs.x.user.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -17,7 +19,12 @@ public class Post {
 	@Id
 	@GeneratedValue
 	private Long id;
+	
+	@Column
+	private String title;
 
+	@Lob
+	@Column
 	private String description;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -27,10 +34,19 @@ public class Post {
 	public Post() {
 	}
 
-	public Post(String description, User user) {
+	public Post(String title,String description, User user) {
 		super();
+		this.title = title;
 		this.description = description;
 		this.user = user;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public Long getId() {
@@ -51,7 +67,7 @@ public class Post {
 
 	public User getUser() {
 		return user;
-	}
+	} 
 
 	public void setUser(User user) {
 		this.user = user;
@@ -59,7 +75,7 @@ public class Post {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(description, id, user);
+		return Objects.hash(id, user);
 	}
 
 	@Override
@@ -71,13 +87,12 @@ public class Post {
 		if (getClass() != obj.getClass())
 			return false;
 		Post other = (Post) obj;
-		return Objects.equals(description, other.description) && Objects.equals(id, other.id)
-				&& Objects.equals(user, other.user);
+		return Objects.equals(id, other.id) && Objects.equals(user, other.user);
 	}
 
 	@Override
 	public String toString() {
-		return "Post [id=" + id + ", description=" + description + ", user=" + user + "]";
+		return "Post [id=" + id + ", title=" + title + ", description=" + description + ", user=" + user + "]";
 	}
 
 }
